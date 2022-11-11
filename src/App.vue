@@ -1,54 +1,59 @@
-<script setup>
-import { ref, toRaw } from "vue";
-import HelloWorld from './components/HelloWorld.vue'
-import { log } from "@/services/utility.js"; // logging browser service
+<template>
 
-let data = $ref(null); // using the new reactivity transform compiler option to avoid .value
+    <!-- div v-for="post in posts" :key="post.id">
+    <h2>{{ post.id }} {{ post.title }}</h2>
+    <p>{{ post.body }}</p>
+  </!-->
+  <div class="container">
+    <Header @toggle-add-task="toggleAddTask" 
+            title="Task Tracker" 
+            :showAddTask="showAddTask"/>
 
-const fetchData = async () => {
-	const response = await fetch(APP_PROPS.VITE_SERVICE_URL);
-  if (!response.ok) {
-  	throw new Error('An error occurred: ' + response.status);
-	} else {
-		const json = await response.json();
-		data = json.threads;
-    log('fetched data:',toRaw(data));
-	}
+    <router-view :showAddTask="showAddTask"></router-view>
+
+    <Footer />
+  </div>
+</template>
+
+<script>
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
+import axios from 'axios';
+ 
+export default {
+  name: 'App',
+  components: {
+    Header,
+    Footer
+  },
+  data() {
+    return {
+      posts: [],
+      showAddTask: false
+    }
+  },
+  methods: {
+
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask
+    },
+  },
+  mounted() {
+    axios
+    .get('https://jsonplaceholder.typicode.com/posts/')
+    .then((response) => {
+        this.posts = response.data
+//        console.log(response)
+      })
+  }
 }
-
-fetchData();
 
 </script>
 
-<template>
-  <header>
-    <img alt="App logo" class="logo" src="@/assets/images/logo.png" width="200" height="200" />
-    <div class="wrapper">
-      <HelloWorld msg="Containerized Minimal Vue 3 App" />
-      <ul class="list">
-      	<li v-for="x in data" :key="x.id">{{ x.name }}</li>
-      </ul>
-    </div>
-  </header>
-</template>
 
-<style>
-@import './assets/css/base.css';
-
-#app {
-  max-width: 1680px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
+<style scoped>
 header {
   line-height: 1.5;
-}
-
-.list {
-	padding: 0 15px;
 }
 
 .logo {
@@ -56,35 +61,15 @@ header {
   margin: 0 auto 2rem;
 }
 
-a,
-.blue {
-  text-decoration: none;
-  color: #0070ff;
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
   header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
   }
 
   header .wrapper {
@@ -93,8 +78,31 @@ a,
     flex-wrap: wrap;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .container {
+    border: 1px solid red;
+    margin: 30px auto;
+    min-height: 300px;
+    padding: 30px;
+    border-radius: 5px;
+
+  }
+
+  .btn {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: inherit;
+  }
+
+  .btn:focus {
+    outline: none;
   }
 }
 </style>
