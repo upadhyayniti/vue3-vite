@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-const mode = (process.env.mode === undefined) ? 'dev' : process.env.mode;
+const mode = (process.env.mode === undefined) ? 'dev' : process.env.mode;  //here
 require('dotenv').config({ path: `${__dirname}/config/.env.${mode}` })
 
 const isDevServer = !process.env.hasOwnProperty('NODE_ENV') || process.env.NODE_ENV === 'development';
@@ -29,7 +29,7 @@ function parsePropType(propStr) {
   }
 }
 
-console.log('mode:',mode);
+console.log('mode:',mode); //here
 console.log('APP_PROPS:',appProps);
 
 export default defineConfig({

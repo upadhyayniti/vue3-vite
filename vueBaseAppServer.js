@@ -13,7 +13,7 @@ if (argv.hasOwnProperty('env') && argv.env) {
 	console.log('Env param found:', argv.env);
 	require('dotenv').config({ path: `${__dirname}/config/.env.${argv.env.toLowerCase()}` })
 } else {
-	console.log('No env param found defaulting to .env');
+	console.log('No env param found defaulting to .env'); //here
 	require('dotenv').config({ path: `${__dirname}/config/.env` });
 }
 
